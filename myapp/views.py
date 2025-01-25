@@ -6,16 +6,19 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import *
 
-from .models import Comment,Post
+from .models import Comment,Post, SocialMediaLink
 # Create your views here.
 def index(request):
-    return render(request,"index.html",{
-        'posts':Post.objects.filter(user_id=request.user.id).order_by("id").reverse(),
-        'top_posts':Post.objects.all().order_by("-likes"),
-        'recent_posts':Post.objects.all().order_by("-id"),
-        'user':request.user,
-        'media_url':settings.MEDIA_URL
+    social_links = SocialMediaLink.objects.all()
+    return render(request, "index.html", {
+        'posts': Post.objects.filter(user_id=request.user.id).order_by("-id"),  # User's posts, reversed order
+        'top_posts': Post.objects.all().order_by("-likes"),  # Top posts by likes
+        'recent_posts': Post.objects.all().order_by("-id"),  # Recent posts
+        'social_links': social_links,  # Social media links
+        'user': request.user,  # Current user
+        'media_url': settings.MEDIA_URL,  # Media URL for static files
     })
+
 
 
 def signup(request):
@@ -60,14 +63,19 @@ def logout(request):
     return redirect('index')
 
 def blog(request):
-    return render(request,"blog.html",{
-            'posts':Post.objects.filter(user_id=request.user.id).order_by("id").reverse(),
-            'top_posts':Post.objects.all().order_by("-likes"),
-            'recent_posts':Post.objects.all().order_by("-id"),
-            'user':request.user,
-            'media_url':settings.MEDIA_URL
-        })
-    
+    social_links = SocialMediaLink.objects.all()  # Get social media links
+    return render(request, "blog.html", {
+        'posts': Post.objects.filter(user_id=request.user.id).order_by("-id"),  # User's posts, reversed order
+        'top_posts': Post.objects.all().order_by("-likes"),  # Top posts by likes
+        'recent_posts': Post.objects.all().order_by("-id"),  # Recent posts
+        'social_links': social_links,  # Social media links
+        'user': request.user,  # Current user
+        'media_url': settings.MEDIA_URL,  # Media URL for static files
+    })
+
+
+
+
 def create(request):
     if request.method == 'POST':
         try:
@@ -178,3 +186,32 @@ def contact_us(request):
         context['message']=f"Dear {name}, Thanks for your time!"
 
     return render(request,"contact.html")
+
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import SocialMediaLink
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required
+def update_social_link(request, link_id):
+    # Ensure the request method is POST
+    if request.method == 'POST':
+        new_link = request.POST.get('new_link')
+        
+        # Get the social media link object or 404
+        social_link = get_object_or_404(SocialMediaLink, id=link_id)
+        
+        # Update the link and save
+        social_link.link = new_link
+        social_link.save()
+        
+        # Add a success message
+        messages.success(request, f"{social_link.name} link updated successfully!")
+        
+        # Redirect back to the same page
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    
+    # If not POST, return an error or redirect
+    messages.error(request, "Invalid request method.")
+    return redirect('/')

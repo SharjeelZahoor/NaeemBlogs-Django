@@ -17,4 +17,5 @@ urlpatterns = [
     path("post/edit/<int:id>",views.editpost,name="editpost"),
     path("post/delete/<int:id>",views.deletepost,name="deletepost"),
     path("contact",views.contact_us,name="contact"),
+    path('update-social-link/<int:link_id>/', views.update_social_link, name='update_social_link'),
 ]

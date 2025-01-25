@@ -1,79 +1,92 @@
+<!-- footer.html -->
+{% load static %}
 
 <style>
-  h4 {
-    text-align: left;
-    color: #dfdada;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    font-size: 20px;
+  .one-link{
+    margin: 30px;
+  }
+  .social-icons {
+  
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
   }
 
-  li {
+  
+  .social-icons a {
+    border-color: white;
     text-decoration: none;
-    text-align: left;
+    font-size: 80px;
+    transition: transform 0.3s ease, color 0.3s ease;
   }
 
-  li a {
-    color: rgb(153, 147, 147);
+  .facebook-icon { color: #3b5998; }
+  .instagram-icon { color: #e4405f; }
+  .twitter-icon { color: #1da1f2; }
+  .youtube-icon { color: #ff0000; }
+  .linkedin-icon { color: #0077b5; }
+
+
+  .social-icons a:hover {
+    transform: scale(1.1);
+    color: #fff; /* Changes the icon color to white */
+    background-color: #0056b3; /* Changes background to blue */
+    border-radius: 50%; /* Makes the background circular */
+}
+
+  .admin-edit {
+    margin-top: 10px;
+    text-align: center;
   }
 
-  li a:hover {
-    color: orange;
+  .admin-edit button {
+    background-color: #f48b0a;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
   }
 
-  @media screen and (max-width:600px) {
-
-    h4,
-    li {
-      text-align: center;
-    }
+  .admin-edit button:hover {
+    background-color:#ffb53e;
   }
 </style>
 
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <h4 class="text-light">SERVICE</h4>
-        <ul>
-          <li><a href="#">Shipping & Returns</a></li>
-          <li><a href="#">Size Guide</a></li>
-        </ul>
+<footer style="padding: 10px;">
+  <div id="contact">
+    <h3 style="text-align: center; color: antiquewhite;">Follow Me on Social Media</h3>
+    <div class="social-icons">
+      {% for link in social_links %}
+      <div class="one-link">
+        <a href="{{ link.url }}" target="_blank" class="{{ link.platform }}-icon">
+          <i class="fab fa-{{ link.platform }}"></i>
+        </a>
+        {% if user.is_staff %}
+          <div class="admin-edit">
+            <button onclick="editLink('{{ link.platform }}')">Edit</button>
+          </div>
+        {% endif %}
       </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <h4 class="text-light">ACCOUNT</h4>
-        <ul>
-          <li><a href="{% url 'signin' %}">Login</a></li>
-          <li><a href="{% url 'signup' %}">Signup</a></li>
-        </ul>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <h4 class="text-light">INFORMATION</h4>
-        <ul>
-          <li><a href="{% url 'blog' %}">Our Story</a></li>
-          <li><a href="#">Find a stocklist</a></li>
-        </ul>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <h4 class="text-light">CONNECT</h4>
-        <ul>
-          <li><a href="https://www.linkedin.com/in/keerti-vishwkarma-8ba754243/">Facebook</a></li>
-          <li><a href="https://www.linkedin.com/in/keerti-vishwkarma-8ba754243/">Instagram</a></li>
-        </ul>
-      </div>
-
+      {% endfor %}
     </div>
   </div>
-
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="p-1 ">
-          <h5 style="color: #dfdada; display: flex; align-items: center; justify-content: center;">&copy; Copyright 💖 2023 | All Rights Reserved
-          </h5>
-            
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="footer-bottom" style="color: #fff; font-size: 36px; padding: 10px;">
+    <p>&copy; 2025 NaeemBlogs. All Rights Reserved.</p>
+</div>
 </footer>
+
+<script>
+  function editLink(platform) {
+    const newUrl = prompt(`Enter the new URL for ${platform}:`);
+    if (newUrl) {
+      // Update the URL via Django's backend or an API endpoint.
+      alert("Link updated successfully!");
+    }
+  }
+</script>
+
+<!-- Add the following Font Awesome link in your <head> for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
