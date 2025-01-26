@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -105,7 +106,18 @@
 
       {% for post in posts|slice:"0:3" %}
       <div class="col col-lg-4 col-md-6 col-12 mb-2 blog-post">
+        {% with post.image.name|lower as file_name %}
+        {% if file_name|endswith:".jpg" or file_name|endswith:".jpeg" or file_name|endswith:".png" %}
         <img src="{{media_url}}{{post.image}}" alt="" width="100%" height="300px">
+        {% elif file_name|endswith:".mp4" or file_name|endswith:".mov" or file_name|endswith:".avi" %}
+        <video controls style="width: 100%;" height="300px">
+          <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        {% else %}
+        <p>Unsupported media type</p>
+        {% endif %}
+        {% endwith %}
         <div class=" px-3 py-5 shadow">
           <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark">
             <span class="text-white bg-info text-center rounded-3 mt-5" style="padding: 8px;">{{post.category}}</span>
@@ -149,59 +161,82 @@
               {% for post in top_posts|slice:"0:7" %}
               <div class="col col-lg-6 col-12 pb-2 blog-post ">
                 <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark mb-3">
-                <img src="{{media_url}}{{post.image}}" alt="" class="img-fluid" width="100%">
-                <div class="px-3 py-5 shadow">
-                  
+                  {% with post.image.name|lower as file_name %}
+                  {% if file_name|endswith:".jpg" or file_name|endswith:".jpeg" or file_name|endswith:".png" %}
+                  <img src="{{media_url}}{{post.image}}" class="img-fluid" alt="" width="100%">
+                  {% elif file_name|endswith:".mp4" or file_name|endswith:".mov" or file_name|endswith:".avi" %}
+                  <video controls style="width: 100%; height: 300px;">
+                    <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                  {% else %}
+                  <p>Unsupported media type</p>
+                  {% endif %}
+                  {% endwith %}
+
+                  <div class="px-3 py-5 shadow">
+
                     <span class="text-white bg-info text-center rounded-3 mt-5"
                       style="padding: 8px;">{{post.category}}</span>
                     <h5 class="mt-4">{{post.postname}}</h5>
-                  </a>
-                  <form method="post" action="{% url 'increaselikes' post.id %}">
-                    {% csrf_token %}
-                    <button class="float-right small" type="submit"
-                      style="border: none; background: transparent; font-size: 25px;"><i
-                        class="fa fa-heart text-danger"></i></button>
-                  </form>
+                </a>
+                <form method="post" action="{% url 'increaselikes' post.id %}">
+                  {% csrf_token %}
+                  <button class="float-right small" type="submit"
+                    style="border: none; background: transparent; font-size: 25px;"><i
+                      class="fa fa-heart text-danger"></i></button>
+                </form>
 
-                  <p class="mt-2">{{post.content|slice:"0:100"}}...</p>
-                  <p class="small text-primary">{{post.time}} </p>
-                </div>
+                <p class="mt-2">{{post.content|slice:"0:100"}}...</p>
+                <p class="small text-primary">{{post.time}} </p>
               </div>
-              {% endfor %}
             </div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="sidebar">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="sidebar-item recent-posts">
-                  <div class="sidebar-heading">
-                    <h2 style="color: rgb(241, 110, 70); font-size: 30px; font-weight: bold;">Popular Posts</h2>
-                  </div>
-                  <div class="content">
-                    <ul>
-
-                      {% for post in recent_posts|slice:"0:" %}
-                      <li>
-                        <img src="{{media_url}}{{post.image}}" class="img-fluid" alt="" width="100%">
-                        <a href="post-details.html">
-                          <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark">
-                            <h5>{{post.postname}}</h5>
-                          </a>
-                          <span>{{post.time}}</span>
-                        </a>
-                      </li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-            </div>
+            {% endfor %}
           </div>
         </div>
       </div>
+      <div class="col-lg-4">
+        <div class="sidebar">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="sidebar-item recent-posts">
+                <div class="sidebar-heading">
+                  <h2 style="color: rgb(241, 110, 70); font-size: 30px; font-weight: bold;">Popular Posts</h2>
+                </div>
+                <div class="content">
+                  <ul>
+
+                    {% for post in recent_posts|slice:"0:" %}
+                    <li>
+                      {% with post.image.name|lower as file_name %}
+                      {% if file_name|endswith:".jpg" or file_name|endswith:".jpeg" or file_name|endswith:".png" %}
+                      <img src="{{media_url}}{{post.image}}" class="img-fluid" alt="" width="100%">
+                      {% elif file_name|endswith:".mp4" or file_name|endswith:".mov" or file_name|endswith:".avi" %}
+                      <video controls style="width: 100%;">
+                        <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                      </video>
+                      {% else %}
+                      <p>Unsupported media type</p>
+                      {% endif %}
+                      {% endwith %}
+                      <a href="post-details.html">
+                        <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark">
+                          <h5>{{post.postname}}</h5>
+                        </a>
+                        <span>{{post.time}}</span>
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
   </section>
 

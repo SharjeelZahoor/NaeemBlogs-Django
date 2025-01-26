@@ -173,7 +173,9 @@ def deletepost(request,id):
     return profile(request,request.user.id)
 
 
+
 def contact_us(request):
+    social_links = SocialMediaLink.objects.all()  # Get social media links
     context={}
     if request.method == 'POST':
         name=request.POST.get('name')    
@@ -185,7 +187,7 @@ def contact_us(request):
         obj.save()
         context['message']=f"Dear {name}, Thanks for your time!"
 
-    return render(request,"contact.html")
+    return render(request,"contact.html",{'social_links': social_links} )
 
 
 from django.shortcuts import get_object_or_404, redirect
