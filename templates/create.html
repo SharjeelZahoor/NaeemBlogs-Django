@@ -50,6 +50,10 @@
       border: 1px solid rgb(237, 63, 63);
     }
 
+    .createopen{
+      color: orange;
+    }
+
     a {
       text-decoration: none;
       color: #386cbb;
@@ -94,8 +98,9 @@
 
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'create' %}">Create</a>
+              <a class="nav-link text-warning" href="{% url 'create' %}" style="orange">Create</a>
             </li>
+              
             <li class="nav-item">
               <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
             </li>

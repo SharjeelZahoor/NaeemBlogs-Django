@@ -1,0 +1,103 @@
+<style>
+  body {
+      margin-top: 100px; /* Space from the top */
+      background-color: #f8f9fa; /* Light background for contrast */
+      font-family: 'Arial', sans-serif; /* Clean font */
+      display: flex; /* Use flexbox for centering */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Full viewport height */
+  }
+  .container {
+      max-width: 900px; /* Maximum width for the container */
+      width: 100%; /* Full width for smaller screens */
+      margin: 0; /* Remove margin */
+      padding: 20px; /* Padding for the container */
+  }
+  .card {
+      background-color: #ffffff; /* White background for the card */
+      border-radius: 10px; /* Rounded corners */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+      padding: 40px; /* Padding inside the card */
+      margin-top: 20px; /* Margin above the card */
+  }
+  h1 {
+      color: #343a40; /* Darker color for main heading */
+      font-size: 2.5rem; /* Larger font size for the main heading */
+      text-align: center; /* Center the main heading */
+      margin-bottom: 10px; /* Space below the main heading */
+  }
+  h2 {
+      color: #343a40; /* Darker color for headings */
+      font-size: 2.5rem; /* Larger font size for the title */
+  }
+  h4 {
+      color: #495057; /* Slightly lighter color for subheadings */
+      font-size: 1.5rem; /* Subheading size */
+      margin-top: 20px; /* Space above subheadings */
+  }
+  p {
+      color: #6c757d; /* Muted text color */
+      line-height: 1.6; /* Improved line height for readability */
+      margin-bottom: 15px; /* Space below paragraphs */
+  }
+  ul {
+      color: #6c757d; /* Muted text color for list items */
+      margin-left: 20px; /* Indent for list items */
+      margin-bottom: 15px; /* Space below lists */
+  }
+  .btn-primary {
+      background-color: #007bff; /* Primary button color */
+      color: #ffffff; /* Change text color to white */
+      border: none; /* No border */
+      border-radius: 5px; /* Rounded button */
+      padding: 10px 20px; /* Padding for button */
+      font-size: 1.2rem; /* Button font size */
+      text-decoration: none; /* Remove underline */
+      display: inline-block; /* Ensure proper button display */
+  }
+  .btn-primary:hover {
+      background-color: #0056b3; /* Darker shade on hover */
+      transition: background-color 0.3s; /* Smooth transition */
+  }
+</style>
+<div class="container">
+  <div class="card shadow">
+      <h1>Privacy Policy for <span style="color: orange;">NaeemBlogs</span></h1> <!-- Main heading -->
+      <p class="text-muted text-center">Last updated: April 25, 2025</p>
+
+      <p>Your privacy is important to <strong>NaeemBlogs</strong>. This policy explains how we collect and use your information.</p>
+
+      <h4>1. Information We Collect</h4>
+      <ul>
+          <li>Your name and email during registration</li>
+          <li>Posts, comments, and other content you submit</li>
+          <li>Technical data like IP address and device information</li>
+      </ul>
+
+      <h4>2. How We Use Your Data</h4>
+      <ul>
+          <li>To operate and maintain our services</li>
+          <li>To communicate with you about updates or promotions</li>
+          <li>To protect against spam, abuse, or security threats</li>
+      </ul>
+
+      <h4>3. Cookies</h4>
+      <p>We use cookies for a better experience. You can manage your cookie settings in your browser.</p>
+
+      <h4>4. Sharing Your Data</h4>
+      <p>We do not sell your data. We may share it with trusted services for operating the platform.</p>
+
+      <h4>5. Data Security</h4>
+      <p>We use appropriate measures to protect your personal information but cannot guarantee complete security.</p>
+
+      <h4>6. Changes to Privacy Policy</h4>
+      <p>We may update this policy occasionally. Please review it regularly.</p>
+
+      <p>For any concerns, email us at <a href="mailto:support@naeemblogs.com">support@naeemblogs.com</a>.</p>
+
+      <div class="text-center mt-4">
+          <a href="{% url 'index' %}" class="btn btn-primary">Back to Home</a>
+      </div>
+  </div>
+</div>

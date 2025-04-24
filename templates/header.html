@@ -14,10 +14,9 @@
     transition: color 0.3s ease;
     /* Smooth color transition */
   }
-
+  
   .nav-item.active a {
     color: rgb(241, 110, 70);
-    ;
     /* Highlighted color for the active link */
     font-weight: bold;
   }
@@ -30,15 +29,33 @@
     <div class="container">
       <a class="navbar-brand" href="{% url 'index' %}">
         <h2>Naeem<span style="color: rgb(241, 110, 70);">Blogs</span></h2>
+
+
+        <!-- checking for online persons-->
+
+        {% if user.is_authenticated %}
+          {% if user.is_superuser %}
+            
+              <h1>
+                <p> 
+                  <strong>Currently online users:</strong> 
+                  {% if online_users %}
+                  {{ online_users }}
+                  {%else%}
+                  <h4>No Visitor</h4>
+                  {% endif %}
+                </p>
+              </h1>
+            
+          {% endif %}
+        {% endif %}
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'index' %}">Home
+            <a class="nav-link" href="{% url 'index' %}">
+              Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -50,24 +67,23 @@
           </li>
 
           {% if user.is_authenticated %}
-          {% if user.is_superuser %}
-          <li class="nav-item {% if request.resolver_match.url_name == 'create' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'create' %}">Create</a>
-          </li>
-          <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
-          </li>
-          {% endif %}
-          <li class="nav-item">
-            <a class="nav-link text-primary" href="{% url 'logout' %}">Logout</a>
-          </li>
+            {% if user.is_superuser %}
+              <li class="nav-item {% if request.resolver_match.url_name == 'create' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'create' %}">Create</a>
+              </li>
+              <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link text-primary" href="{% url 'logout' %}">Logout</a>
+            </li>
           {% else %}
-          <li class="nav-item {% if request.resolver_match.url_name == 'signin' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'signin' %}"><i class="fa fa-user"></i></a>
-          </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'signin' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'signin' %}"><i class="fa fa-user"></i></a>
+            </li>
           {% endif %}
         </ul>
-
       </div>
     </div>
   </nav>
@@ -77,9 +93,7 @@
 <!-- Banner Starts Here -->
 <div class="main-banner header-text">
   <div class="container-fluid">
-    <div class="owl-banner owl-carousel">
-
-    </div>
+    <div class="owl-banner owl-carousel"></div>
   </div>
 </div>
 <!-- Banner Ends Here -->

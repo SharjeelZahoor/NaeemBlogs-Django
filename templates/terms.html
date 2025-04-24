@@ -1,0 +1,92 @@
+<style>
+    body {
+        margin-top: 80px;
+        background-color: #f8f9fa; /* Light background for contrast */
+        font-family: 'Arial', sans-serif; /* Clean font */
+        display: flex; /* Use flexbox for centering */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        height: 100vh; /* Full viewport height */
+    }
+    .container {
+        
+        max-width: 900px; /* Maximum width for the container */
+        width: 100%; /* Full width for smaller screens */
+        margin: 0; /* Remove margin */
+        padding: 20px; /* Padding for the container */
+    }
+    .card {
+        background-color: #ffffff; /* White background for the card */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+        padding: 40px; /* Padding inside the cSard */
+        margin-top: 20px; /* Margin above the card */
+    }
+    h1 {
+        color: #343a40; /* Darker color for main heading */
+        font-size: 2.5rem; /* Larger font size for the main heading */
+        text-align: center; /* Center the main heading */
+        margin-bottom: 10px; /* Space below the main heading */
+    }
+    h2 {
+        color: #343a40; /* Darker color for headings */
+        font-size: 2.5rem; /* Larger font size for the title */
+    }
+    h4 {
+        color: #495057; /* Slightly lighter color for subheadings */
+        font-size: 1.5rem; /* Subheading size */
+        margin-top: 20px; /* Space above subheadings */
+    }
+    p {
+        color: #6c757d; /* Muted text color */
+        line-height: 1.6; /* Improved line height for readability */
+        margin-bottom: 15px; /* Space below paragraphs */
+    }
+    .btn-primary {
+        background-color: #007bff; /* Primary button color */
+        color: #ffffff; /* Change text color to white */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded button */
+        padding: 10px 20px; /* Padding for button */
+        font-size: 1.2rem; /* Button font size */
+        text-decoration: none; /* Remove underline */
+        display: inline-block; /* Ensure proper button display */
+    }
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+</style>
+
+<div class="container">
+    <div class="card shadow">
+        <h1>Terms and Conditions for <span style="color: orange;">NaeemBlogs</span></h1> <!-- Main heading -->
+        <p class="text-muted text-center">Last updated: April 16, 2025</p>
+
+        <p>Welcome to <strong>NaeemBlogs</strong>. By accessing and using our platform, you agree to the following terms and conditions. If you do not agree, please do not use our services.</p>
+
+        <h4>1. Use of the Website</h4>
+        <p>You must be at least 13 years old to use our site. You agree to use it legally and respectfully.</p>
+
+        <h4>2. User Content</h4>
+        <p>You're responsible for what you post. Do not share illegal, offensive, or copyrighted content.</p>
+
+        <h4>3. Account Responsibility</h4>
+        <p>Keep your account secure. Any activity under your account is your responsibility.</p>
+
+        <h4>4. Intellectual Property</h4>
+        <p>All logos, trademarks, and content are owned by NaeemBlogs. Please do not copy them without permission.</p>
+
+        <h4>5. Termination</h4>
+        <p>We may terminate accounts that violate our terms at our discretion.</p>
+
+        <h4>6. Changes to Terms</h4>
+        <p>We may update our terms at any time. Please check this page regularly.</p>
+
+        <p>If you have any questions, contact us at <a href="mailto:support@naeemblogs.com">support@naeemblogs.com</a>.</p>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'index' %}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+</div>

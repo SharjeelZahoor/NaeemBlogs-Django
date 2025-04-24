@@ -19,6 +19,14 @@ def index(request):
         'media_url': settings.MEDIA_URL,  # Media URL for static files
     })
 
+from myapp.utils import get_online_user_count
+
+@login_required
+def home(request):
+    online_users = None
+    if request.user.is_staff:  # Only show to admin users
+        online_users = get_online_user_count()
+    return render(request, 'home.html', {'online_users': online_users})
 
 
 def signup(request):
@@ -217,3 +225,13 @@ def update_social_link(request, link_id):
     # If not POST, return an error or redirect
     messages.error(request, "Invalid request method.")
     return redirect('/')
+
+# terms and conditions
+#privacy
+from django.shortcuts import render
+
+def terms_view(request):
+    return render(request, 'terms.html')
+
+def privacy_view(request):
+    return render(request, 'privacy.html')
