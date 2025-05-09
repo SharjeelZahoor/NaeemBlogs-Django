@@ -1,21 +1,27 @@
 from django.contrib import admin
-from .models import Post,Comment,Contact, SocialMediaLink
+from .models import Post,Comment, SocialMediaLink
 # Register your models here.
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('postname', 'category', 'time', 'likes', 'user')
+    list_display = ('postname', 'category', 'time', 'likes_count', 'user', 'content', 'social_image', 'social_title', 'meta_description', 'social_description', 'meta_keywords')
     search_fields = ('postname', 'category', 'user__username')
+    
+    # Add this method
+    def likes_count(self, obj):
+        return obj.likes.count()
+    likes_count.short_description = 'Likes'
+
     fieldsets = (
         ('Post Info', {
-            'fields': ('postname', 'category', 'image', 'content', 'time', 'likes', 'user')
+            'fields': ('postname', 'category', 'image', 'content', 'time', 'user')  # Remove 'likes_count' here
         }),
         ('SEO Options', {
             'fields': ('meta_keywords', 'meta_description', 'social_title', 'social_description', 'social_image')
         }),
     )
+
 admin.site.register(Comment)
-admin.site.register(Contact)
 
 
 

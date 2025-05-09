@@ -122,14 +122,24 @@ def profileedit(request,id):
     return render(request,"profileedit.html",{
         'user':User.objects.get(id=id),
     })
-    
-def increaselikes(request,id):
-    if request.method == 'POST':
-        post = Post.objects.get(id=id)
-        post.likes += 1
-        post.save() 
-    return redirect("index")
 
+
+@login_required
+def togglelike(request, post_id):
+    post = Post.objects.get(id=post_id)
+    user = request.user
+
+    if user in post.likes.all():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+
+    return JsonResponse({
+        'liked': liked,
+        'total_likes': post.likes.count()
+    })
 
 def post(request,id):
     post = Post.objects.get(id=id)
@@ -179,24 +189,6 @@ def editpost(request,id):
 def deletepost(request,id):
     Post.objects.get(id=id).delete()
     return profile(request,request.user.id)
-
-
-
-def contact_us(request):
-    social_links = SocialMediaLink.objects.all()  # Get social media links
-    context={}
-    if request.method == 'POST':
-        name=request.POST.get('name')    
-        email=request.POST.get('email')  
-        subject=request.POST.get('subject')  
-        message=request.POST.get('message')  
-
-        obj = Contact(name=name,email=email,subject=subject,message=message)
-        obj.save()
-        context['message']=f"Dear {name}, Thanks for your time!"
-
-    return render(request,"contact.html",{'social_links': social_links} )
-
 
 from django.shortcuts import get_object_or_404, redirect
 from .models import SocialMediaLink

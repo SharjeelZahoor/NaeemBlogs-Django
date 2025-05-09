@@ -197,7 +197,7 @@
                   <a class="nav-link" href="{% url 'create' %}">Create</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
+                  <a class="nav-link" href="{% url 'profile' user.id %}" style="color: orange;">Profile</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -258,13 +258,79 @@
                         {% for post in posts %}
                           {% if post.user_id == user.id %}
                             <div class="col col-lg-6 col-12 mb-2">
-                              {% if post.image.name|lower|endswith:'.mp4' or post.image.name|lower|endswith:'.mov' or post.image.name|lower|endswith:'.avi' %}
+                              {% with file_name=post.image.name|lower %}
+                              {% if file_name|endswith:".jpg" or file_name|endswith:".jpeg" or file_name|endswith:".png" %}
+                              <img src="{{media_url}}{{post.image}}" class="img-fluid" alt="" width="100%">
+                              {% elif post.image.name|lower|endswith:'.mp4' or post.image.name|lower|endswith:'.mov' or post.image.name|lower|endswith:'.avi' %}
                                 <video controls style="height: 300px; width: 100%;">
                                   <source src="{{ media_url }}{{ post.image }}" type="video/mp4" />Your browser does not support the video tag.
                                 </video>
+
+                                {% elif file_name|endswith:".mp3" or file_name|endswith:".wav" or file_name|endswith:".ogg" %}
+                                <div style="height:200px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                                  <audio controls style="width: 100%; max-width: 90%;">
+                                    <source src="{{ media_url }}{{ post.image }}">
+                                    Your browser does not support the audio element.
+                                  </audio>
+                                </div>
+                                
+                                {% elif file_name|endswith:".pdf" %}
+                                <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                                  <p style="font-weight: bold; margin-bottom: 20px;">PDF Document</p>
+                                  <div style="display: flex; gap: 15px;">
+                                    
+                                    <!-- Download PDF Button -->
+                                    <a href="{{ post.image.url }}" download
+                                      style="
+                                        background-color: #ff6600;
+                                        color: white;
+                                        padding: 12px 24px;
+                                        border-radius: 6px;
+                                        font-weight: 600;
+                                        text-decoration: none;
+                                        box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        user-select: none;
+                                      "
+                                      onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                                      onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                                      Download
+                                    </a>
+                              
+                                    <!-- View PDF Button -->
+                                    <a href="{{ post.image.url }}" target="_blank"
+                                      style="
+                                        background-color: #ff6600;
+                                        color: white;
+                                        padding: 12px 24px;
+                                        border-radius: 6px;
+                                        font-weight: 600;
+                                        text-decoration: none;
+                                        box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        user-select: none;
+                                      "
+                                      onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                                      onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                                      View
+                                    </a>
+                                    
+                                  </div>
+                                </div>
+                                
+                              {% elif file_name|endswith:".doc" or file_name|endswith:".docx" %}
+                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ media_url }}{{ post.image }}" width="100%" height="500px"></iframe>
+                                
                               {% else %}
-                                <img src="{{ media_url }}{{ post.image }}" alt="" height="300px" width="100%" />
+                                <p>Unsupported media type</p>
                               {% endif %}
+                              {% endwith %}
 
                               <div class="px-3 py-2 shadow">
                                 <h5>{{ post.postname }}</h5>
@@ -274,7 +340,6 @@
                                 <p>{{ post.content|slice:'0:20' }}...</p>
                                 <p class="small text-primary">
                                   {{ post.time }}
-                                  <span class="text-danger float-right">Likes: {{ post.likes }}</span>
                                 </p>
                               </div>
                             </div>

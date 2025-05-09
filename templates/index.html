@@ -20,7 +20,7 @@
   <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-</head>
+
 
 
 <!-- Additional CSS Files -->
@@ -100,9 +100,10 @@
 
   <div class="container mt-5">
     <h5 class="text-center"
-      style="margin: 50px; font-weight: bolder; font-size: 40px; color: rgb(241, 110, 70);; font-size:xx-large; font-family: Gill Sans Extrabold, sans-serif"
-      ;>My Posts</h5>
-    <hr>
+      style="margin: 50px; font-weight: bolder; font-size: 40px; color: rgb(241, 110, 70);; font-size:xx-large; font-family: Gill Sans Extrabold, sans-serif;">My Posts</h5>
+    <h5>
+    
+    
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1" class="blog-posts">
 
       {% for post in posts|slice:"0:3" %}
@@ -115,21 +116,91 @@
           <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
+
+        {% elif file_name|endswith:".mp3" or file_name|endswith:".wav" or file_name|endswith:".ogg" %}
+        <div style="height: 330px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+          <audio controls style="width: 100%; max-width: 90%;">
+            <source src="{{ media_url }}{{ post.image }}">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        {% elif file_name|endswith:".pdf" %}
+        <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+          <p style="font-weight: bold; margin-bottom: 20px;">PDF Document</p>
+          <div style="display: flex; gap: 15px;">
+            
+            <!-- Download PDF Button -->
+            <a href="{{ post.image.url }}" download
+              style="
+                background-color: #ff6600;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-weight: 600;
+                text-decoration: none;
+                box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                user-select: none;
+              "
+              onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+              onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+              Download
+            </a>
+      
+            <!-- View PDF Button -->
+            <a href="{{ post.image.url }}" target="_blank"
+              style="
+                background-color: #ff6600;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-weight: 600;
+                text-decoration: none;
+                box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                user-select: none;
+              "
+              onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+              onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+              View
+            </a>
+            
+          </div>
+        </div>
+        
+        {% elif file_name|endswith:".doc" or file_name|endswith:".docx" or file_name|endswith:".xls" or file_name|endswith:".xlsx" or file_name|endswith:".ppt" or file_name|endswith:".pptx" or file_name|endswith:".txt" %}
+        <p><a href="{{ media_url }}{{ post.image }}" target="_blank">Download document: {{ file_name }}</a></p>
+      
+
         {% else %}
-        <p>Unsupported media type</p>
+        <p>Unsupported media type: <a href="{{ media_url }}{{ post.image }}" target="_blank">{{ file_name }}</a></p>
         {% endif %}
         {% endwith %}
+
+
+
         <div class=" px-3 py-5 shadow">
           <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark">
             <span class="text-white bg-info text-center rounded-3 mt-5" style="padding: 8px;">{{post.category}}</span>
             <h5 class="mt-4">{{post.postname}}</h5>
           </a>
-          <form method="post" action="{% url 'increaselikes' post.id %}">
-            {% csrf_token %}
-            <button class="float-right small" type="submit"
-              style="border: none; background: transparent; font-size: 25px;"><i
-                class="fa fa-heart text-danger"></i></button>
-          </form>
+            
+          <i id="heart-{{ post.id }}"
+          class="fa {% if user in post.likes.all %}fa-heart{% else %}fa-heart-o{% endif %}"
+          style="cursor: pointer; font-size: 32px; {% if user in post.likes.all %}color: red; {% else %}color:grey;{% endif %}"
+          onclick="toggleLike({{ post.id }})" onclick="toggleLikeRefresh({{ post.id }})">
+       </i>
+       
+       <span id="like-count-{{ post.id }}">
+         Likes: {{ post.likes.count }}
+       </span>
 
           <p>{{post.content|slice:"0:100"}}...</p>
           <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark">
@@ -153,12 +224,10 @@
       <h5 class="text-center"
         style="margin: 50px; font-weight: bolder; font-size: 40px; color: rgb(241, 110, 70); font-size:xx-large; font-family: Gill Sans Extrabold, sans-serif"
         ;>Recent Posts</h5>
-      <hr>
       <div class=" row">
         <div class="col-lg-8">
           <div class="all-blog-posts">
             <div class="row">
-
               {% for post in top_posts|slice:"0:7" %}
               <div class="col col-lg-6 col-12 pb-2 blog-post ">
                 <a href="{% url 'post' post.id %}" class="text-decoration-none text-dark mb-3">
@@ -170,7 +239,66 @@
                     <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
                     Your browser does not support the video tag.
                   </video>
-                  {% else %}
+
+                  {% elif file_name|endswith:".mp3" or file_name|endswith:".wav" or file_name|endswith:".ogg" %}
+                  <div style="height:200px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                    <audio controls style="width: 100%; max-width: 90%;">
+                      <source src="{{ media_url }}{{ post.image }}">
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                  
+                  {% elif file_name|endswith:".pdf" %}
+                  <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                    <p style="font-weight: bold; margin-bottom: 20px;">PDF Document</p>
+                    <div style="display: flex; gap: 15px;">
+                      
+                      <!-- Download PDF Button -->
+                      <a href="{{ post.image.url }}" download
+                        style="
+                          background-color: #ff6600;
+                          color: white;
+                          padding: 12px 24px;
+                          border-radius: 6px;
+                          font-weight: 600;
+                          text-decoration: none;
+                          box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          user-select: none;
+                        "
+                        onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                        onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                        Download
+                      </a>
+                
+                      <!-- View PDF Button -->
+                      <a href="{{ post.image.url }}" target="_blank"
+                        style="
+                          background-color: #ff6600;
+                          color: white;
+                          padding: 12px 24px;
+                          border-radius: 6px;
+                          font-weight: 600;
+                          text-decoration: none;
+                          box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          user-select: none;
+                        "
+                        onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                        onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                        View
+                      </a>
+                      
+                    </div>
+                  </div>
+
+                {% else %}
                   <p>Unsupported media type</p>
                   {% endif %}
                   {% endwith %}
@@ -181,12 +309,6 @@
                       style="padding: 8px;">{{post.category}}</span>
                     <h5 class="mt-4">{{post.postname}}</h5>
                 </a>
-                <form method="post" action="{% url 'increaselikes' post.id %}">
-                  {% csrf_token %}
-                  <button class="float-right small" type="submit"
-                    style="border: none; background: transparent; font-size: 25px;"><i
-                      class="fa fa-heart text-danger"></i></button>
-                </form>
 
                 <p class="mt-2">{{post.content|slice:"0:100"}}...</p>
                 <p class="small text-primary">{{post.time}} </p>
@@ -217,6 +339,65 @@
                         <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
                         Your browser does not support the video tag.
                       </video>
+                      
+                  {% elif file_name|endswith:".mp3" or file_name|endswith:".wav" or file_name|endswith:".ogg" %}
+                  <div style="height:200px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                    <audio controls style="width: 100%; max-width: 90%;">
+                      <source src="{{ media_url }}{{ post.image }}">
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+
+                  {% elif file_name|endswith:".pdf" %}
+                  <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                    <p style="font-weight: bold; margin-bottom: 20px;">PDF Document</p>
+                    <div style="display: flex; gap: 15px;">
+                      
+                      <!-- Download PDF Button -->
+                      <a href="{{ post.image.url }}" download
+                        style="
+                          background-color: #ff6600;
+                          color: white;
+                          padding: 12px 24px;
+                          border-radius: 6px;
+                          font-weight: 600;
+                          text-decoration: none;
+                          box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          user-select: none;
+                        "
+                        onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                        onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                        Download
+                      </a>
+                
+                      <!-- View PDF Button -->
+                      <a href="{{ post.image.url }}" target="_blank"
+                        style="
+                          background-color: #ff6600;
+                          color: white;
+                          padding: 12px 24px;
+                          border-radius: 6px;
+                          font-weight: 600;
+                          text-decoration: none;
+                          box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          user-select: none;
+                        "
+                        onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                        onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                        View
+                      </a>
+                      
+                    </div>
+                  </div>
+                
                       {% else %}
                       <p>Unsupported media type</p>
                       {% endif %}
@@ -274,6 +455,66 @@
     }
 
   </script>
+
+  <script>
+    function toggleLikeRefresh(postId) {
+      // Example: Toggling the "like" status (you can replace this logic with actual backend interaction)
+      const isLiked = document.getElementById('like-button-' + postId).classList.toggle('liked');
+      
+      // Optionally, you can send an AJAX request to update the like status on the server here.
+  
+      // Refresh the page after toggling the like status
+      window.location.reload();
+    }
+  </script>
+ 
+
+  <script>
+    function toggleLike(postId) {
+      fetch(`/togglelike/${postId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const heartIcon = document.getElementById(`heart-${postId}`);
+        const likeCount = document.getElementById(`like-count-${postId}`);
+  
+        if (data.liked) {
+          heartIcon.classList.remove('fa-heart-o');
+          heartIcon.classList.add('fa-heart');
+          heartIcon.style.color = 'red';
+        } else {
+          heartIcon.classList.remove('fa-heart');
+          heartIcon.classList.add('fa-heart-o');
+          heartIcon.style.color = '';
+        }
+  
+        likeCount.textContent = `Likes: ${data.total_likes}`;
+      });
+    }
+  
+    // CSRF token helper
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+  
+
 
 </body>
 

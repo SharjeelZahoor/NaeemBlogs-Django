@@ -55,7 +55,67 @@ https://templatemo.com/tm-551-stand-blog
                       <source src="{{ media_url }}{{ post.image }}" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
-                    {% else %}
+
+                    
+                    {% elif file_name|endswith:".mp3" or file_name|endswith:".wav" or file_name|endswith:".ogg" %}
+                    <div style="height:200px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                      <audio controls style="width: 100%; max-width: 90%;">
+                        <source src="{{ media_url }}{{ post.image }}">
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                    
+                    {% elif file_name|endswith:".pdf" %}
+                    <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                      <p style="font-weight: bold; margin-bottom: 20px;">PDF Document</p>
+                      <div style="display: flex; gap: 15px;">
+                        
+                        <!-- Download PDF Button -->
+                        <a href="{{ post.image.url }}" download
+                          style="
+                            background-color: #ff6600;
+                            color: white;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            font-weight: 600;
+                            text-decoration: none;
+                            box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            user-select: none;
+                          "
+                          onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                          onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                          Download
+                        </a>
+                  
+                        <!-- View PDF Button -->
+                        <a href="{{ post.image.url }}" target="_blank"
+                          style="
+                            background-color: #ff6600;
+                            color: white;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            font-weight: 600;
+                            text-decoration: none;
+                            box-shadow: 0 4px 6px rgba(255, 102, 0, 0.4);
+                            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            user-select: none;
+                          "
+                          onmouseover="this.style.backgroundColor='#e65500'; this.style.boxShadow='0 6px 8px rgba(230, 85, 0, 0.6)';"
+                          onmouseout="this.style.backgroundColor='#ff6600'; this.style.boxShadow='0 4px 6px rgba(255, 102, 0, 0.4)';">
+                          View
+                        </a>
+                        
+                      </div>
+                    </div>
+                    
+                  {% else %}
                     <p>Unsupported media type</p>
                     {% endif %}
                     {% endwith %}
@@ -68,7 +128,6 @@ https://templatemo.com/tm-551-stand-blog
                     <ul class="post-info">
                       <li><a href="#">{{post.user}}</a></li>
                       <li><a href="#">{{post.time}}</a></li>
-                      <li><a href="#">10 Comments</a></li>
                     </ul>
                     <p>{{post.content}}</p>
                     <div class="post-options">

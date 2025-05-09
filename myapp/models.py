@@ -22,14 +22,22 @@ class Post(models.Model):
     image = models.FileField(upload_to='images/posts', validators=[validate_file_type])
     content = models.CharField(max_length=100000)
     time = models.CharField(default=time,max_length=100, blank=True)
-    likes = models.IntegerField(null=True,blank=True,default=0)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    social_image = models.ImageField(upload_to='social_images/', null=True, blank=True)
+    social_title = models.CharField(max_length=255, null=True, blank=True)
+    meta_description = models.TextField(null=True, blank=True)
+    social_description = models.TextField(null=True, blank=True)
+    meta_keywords = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return str( self.postname)
-    
-    
+        return str(self.postname)
+
+    def total_likes(self):
+        return self.likes.count()
+
+
 class Comment(models.Model):
     content = models.CharField(max_length=200)
     time = models.CharField(default=time,max_length=100, blank=True)
@@ -39,13 +47,6 @@ class Comment(models.Model):
         return  f"{self.id}.{self.content[:20]}..."
     
     
-
-class Contact(models.Model):
-    name = models.CharField(max_length=600)
-    email = models.EmailField(max_length=600)
-    subject = models.CharField(max_length=1000)
-    message = models.CharField(max_length=10000, blank=True)
-
 
 class SocialMediaLink(models.Model):
     PLATFORM_CHOICES = [
